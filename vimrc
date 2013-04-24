@@ -1,19 +1,22 @@
 set nocompatible
+autocmd! BufWritePost .vimrc source %
+" Bundles: {{{
 filetype off
-autocmd! bufwritepost .vimrc source %
-" Bundles {{{
 set runtimepath+=~/.vim/bundle/vundle/
 call vundle#rc()
 
 Bundle 'gmarik/vundle'
-Bundle 'xoria256.vim'
-Bundle 'SuperTab'
-Bundle 'git://github.com/lunaru/vim-less.git'
-Bundle 'AutoClose'
+Bundle 'Xoria256m'
+Bundle 'Raimondi/delimitMate'
+Bundle 'ervandew/supertab'
+Bundle 'groenewege/vim-less'
+Bundle 'othree/html5.vim'
+Bundle 'mattn/zencoding-vim'
+Bundle 'surround.vim'
 
-let g:netrw_list_hide= '\(^\|\s\s\)\zs\.\S\+'
-let g:netrw_preview = 1
+let g:delimitMate_expand_cr = 1
 
+filetype plugin indent on
 " }}}
 " System {{{
 set nomodeline 
@@ -126,11 +129,8 @@ endfunction
 au BufReadPost,BufWritePost ~/src/sandbox/*.c call Gcc()
 au FileType c setlocal foldmethod=syntax
 " }}}
-" LESS {{{
-au FileType less set noautoindent nosmartindent cindent
-au FileType less set omnifunc=csscomplete#CompleteCSS
-let g:SuperTabDefaultCompletionType = "<C-X><C-O>"
-" }}}
-" PHP {{{ 
+" LESS, CSS, HTML, PHP, JavaScript {{{
+au FileType less setlocal omnifunc=csscomplete#CompleteCSS smartindent
+au FileType html setlocal omnifunc=zencoding#CompleteTag sw=2 ts=2
 let g:php_folding=2
 " }}}
