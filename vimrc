@@ -22,10 +22,10 @@ filetype plugin indent on
 set nomodeline 
 set visualbell
 set lazyredraw ttyfast
-set autoread
 set hidden
 set nobackup noswapfile nowritebackup viminfo=
-filetype plugin indent on
+set autoread autochdir
+set confirm
 " }}}
 " Language and encodings {{{
 set keymap=russian-jcukenwin " Switch keymap with i_CTRL-^
@@ -41,8 +41,9 @@ set backspace=indent,eol,start
 set tabstop=4 shiftwidth=4 noexpandtab
 set hlsearch incsearch ignorecase smartcase 
 set gdefault magic
-set wildmenu wildmode=longest,full
-set completeopt=menuone,preview,longest
+set wildmenu wildmode=full
+set complete=.,w,b,u,t
+set completeopt=menuone,preview
 set scrolloff=7
 set foldmethod=marker
 set wrap linebreak textwidth=0 wrapmargin=0
@@ -56,7 +57,7 @@ set laststatus=2
 set statusline=[%n]%<%F\ %y[%{&ff}]\ %m%r%w%a\ %=%l/%L,%c%V\ %P\ %#IncSearch#%{getcwd()}
 
 if &t_Co == 256
-	colorscheme xoria256
+	colorscheme xoria256m
 	highlight CursorLine  ctermbg=233
 	highlight ColorColumn ctermbg=233
 	set cursorline
@@ -118,13 +119,24 @@ no <leader>p :r !xclip -o -sel clip<CR>
 no <leader>P :-1r !xclip -o -sel clip<CR>
 
 command! W w !sudo tee % > /dev/null
+
+" Taken from http://stackoverflow.com/a/8459043
+command! -bang Bufo :call DeleteHiddenBuffers('<bang>')
+
+function! DeleteHiddenBuffers(bang)
+    let tpbl=[]
+    call map(range(1, tabpagenr('$')), 'extend(tpbl, tabpagebuflist(v:val))')
+    for buf in filter(range(1, bufnr('$')), 'bufexists(v:val) && index(tpbl, v:val)==-1')
+        execute 'confirm bwipeout' .a:bang. buf
+    endfor
+endfunction
 "}}}
 " C/C++ {{{
 " Sandbox one-file projects. Read custom modeline for gcc flags.
 function! Gcc()
 	let flags = get(matchlist(getline(1), 'gcc:\(.*\):'), 1, '-Wall')
 	let &l:makeprg = 'gcc %:p -o/tmp/%:t:r ' .flags
-	nmap <buffer> <F5> :make \| !/tmp/%:t:r && rm /tmp/%:t:r<CR>
+	no <buffer> <F5> :make \| !/tmp/%:t:r && rm /tmp/%:t:r<CR>
 endfunction
 au BufReadPost,BufWritePost ~/src/sandbox/*.c call Gcc()
 au FileType c setlocal foldmethod=syntax
