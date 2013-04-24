@@ -65,44 +65,54 @@ else
 endif
 " }}}
 " Mapping {{{
+
 let mapleader = ","
 no ; :
 no \ ;
-no 0 ^
+vn 0 ^
 no ^ 0
 
-map <leader>ev :e $MYVIMRC<cr>
+set wildcharm=<c-z>
+no <leader>e<tab> :e <c-z>
+no <leader>ev :e $MYVIMRC<cr>
 
-map * *N
-map <leader><space> :nohl<CR>
-map gb :bnext<CR>
-map gB :bprev<CR>
-map <leader>w :w<CR>
-map <leader>d :bd<CR>
-map <leader>l :ls<CR>
-map <leader><tab> <c-^>
+no * *N
+no <leader><space> :nohl<CR>
+no <leader>i :set list!<CR>
+no <leader>s :set spell!<CR>
+set pastetoggle= " ctrl &
+ino <expr> <nul> "\<C-x>\<C-o>"
+
+" buffers and windows
+no  gb :bnext<CR>
+no  gB :bprev<CR>
+no  <leader>d :bd<CR>
+no  <leader>l :ls<CR>
+no  <c-s> :w<CR>
+ino <c-s> <ESC>:w<CR>
+no  <leader><leader> <c-^>
+no  <leader><tab> :b <c-z>
 
 " force 'hjkl' motion
-imap  <Up>     <NOP>
-imap  <Down>   <NOP>
-imap  <Left>   <NOP>
-imap  <Right>  <NOP>
-map   <Up>     <NOP>
-map   <Down>   <NOP>
-map   <Left>   <NOP>
-map   <Right>  <NOP>
+ino  <Up>     <nop>
+ino  <Down>   <nop>
+ino  <Left>   <nop>
+ino  <Right>  <nop>
+no   <Up>     <c-w><c-k>
+no   <Down>   <c-w><c-j>
+no   <Left>   <c-w><c-h>
+no   <Right>  <c-w><c-l>
 
 " browser-like scrolling
-map   <Space>  <PageDown>
-map   -        <PageUp>
-map j gj
-map k gk
+no   <Space>  <PageDown>
+no   -        <PageUp>
+no j gj
+no k gk
 
-map <leader>i :set list!<CR>
-map <leader>s :set spell!<CR>
-set pastetoggle= " ctrl &
-
-map <F7> :w !xclip -sel c<CR>
+" OS integration
+vn <leader>y y:call system("xclip -i -sel clip", getreg("\""))<CR>
+no <leader>p :r !xclip -o -sel clip<CR>
+no <leader>P :-1r !xclip -o -sel clip<CR>
 
 command! W w !sudo tee % > /dev/null
 "}}}
