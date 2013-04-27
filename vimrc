@@ -6,7 +6,6 @@ set runtimepath+=~/.vim/bundle/vundle/
 call vundle#rc()
 
 Bundle 'gmarik/vundle'
-Bundle 'Xoria256m'
 Bundle 'Raimondi/delimitMate'
 Bundle 'ervandew/supertab'
 Bundle 'groenewege/vim-less'
@@ -14,6 +13,7 @@ Bundle 'othree/html5.vim'
 Bundle 'mattn/zencoding-vim'
 Bundle 'surround.vim'
 
+Bundle 'jellybeans.vim'
 let g:delimitMate_expand_cr = 1
 
 filetype plugin indent on
@@ -39,7 +39,7 @@ set spelllang=en,ru
 " Editor {{{
 set backspace=indent,eol,start
 set tabstop=4 shiftwidth=4 noexpandtab
-set hlsearch incsearch ignorecase smartcase 
+set nohlsearch incsearch ignorecase smartcase 
 set gdefault magic
 set wildmenu wildmode=full
 set complete=.,w,b,u,t
@@ -54,12 +54,10 @@ syntax on
 set noshowmatch 
 set showcmd showmode relativenumber 
 set laststatus=2
-set statusline=[%n]%<%F\ %y[%{&ff}]\ %m%r%w%a\ %=%l/%L,%c%V\ %P\ %#IncSearch#%{getcwd()}
+set statusline=[%n]%<%f\ %y[%{&ff}][%{&fenc}]\ %m%r%w%a\ %=%l/%L,%c%V\ %P\ %#Folded#%{getcwd()}
 
 if &t_Co == 256
-	colorscheme xoria256m
-	highlight CursorLine  ctermbg=233
-	highlight ColorColumn ctermbg=233
+	colorscheme jellybeans
 	set cursorline
 	set colorcolumn=80
 	set listchars=tab:▸\ ,eol:¬
@@ -67,14 +65,22 @@ else
 	colorscheme desert
 	highlight MatchParen ctermfg=none ctermbg=blue
 endif
+
+if &term =~ 'screen'
+	au BufEnter * let &titlestring = "[" . expand("%:t") . "]"
+	set t_ts=k
+	set t_fs=\
+	set title
+endif
 " }}}
 " Mapping {{{
-
 let mapleader = ","
 no ; :
 no \ ;
-vn 0 ^
+no 0 ^
 no ^ 0
+no ' `
+no ` '
 
 set wildcharm=<c-z>
 no <leader>e<tab> :e <c-z>
