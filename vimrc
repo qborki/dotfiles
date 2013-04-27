@@ -146,3 +146,6 @@ au FileType less setlocal omnifunc=csscomplete#CompleteCSS smartindent
 au FileType html setlocal omnifunc=zencoding#CompleteTag sw=2 ts=2
 let g:php_folding=2
 " }}}
+" Firefox Extensions {{{
+au BufReadPost,BufWritePost ~/src/firefox/** map <silent> <F5> :!firefox -new-instance -P dev &<CR><CR>
+" }}}
